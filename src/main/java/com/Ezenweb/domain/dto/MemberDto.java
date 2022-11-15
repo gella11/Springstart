@@ -11,13 +11,13 @@ import lombok.*;
 @Builder
 public class MemberDto {
     private int mno;
-    private String memail;
+    private String meamil;
     private String mpassword;
 
     // *dto ---> entity 변환
     public MemberEntity toEntity(){
         return MemberEntity.builder().mno(this.mno)
-                                    .meamil(this.memail)
+                                    .meamil(this.meamil)
                                     .mpassword(this.mpassword)
                                     .build();
 

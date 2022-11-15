@@ -1,0 +1,38 @@
+button()
+function button(){
+    $.ajax({
+        url:"/member/setindex",
+        type:"get",
+        success: function(re){
+        if(re !=0){
+            html = '<button type="button" onclick="logout()"> 로그아웃 </button>'
+                  +'<a href="http://192.168.17.134:8080/member/findpassword"><button type="button"> 비밀번호 찾기</button></a>'
+                  +'<a href="http://192.168.17.134:8080/member/update"><button type="button"> 비밀번호 수정</button></a>'
+                  +'<a href="http://192.168.17.134:8080/member/delete"><button type="button"> 회원탈퇴</button></a>'
+
+             }
+        else{
+            html ='<a href="http://192.168.17.134:8080/member/signup"><button> 회원가입 </button></a>'
+                  +'<a href="http://192.168.17.134:8080/member/login"> <button> 로그인 </button></a>'
+
+            }
+            document.querySelector('.buttonbox').innerHTML = html
+        }
+    })
+}
+
+function logout(){
+    $.ajax({
+        url:"/member/logout",
+        type : "get",
+        success: function(re){
+                if(re==true){
+                    alert('로그아웃 되었습니다.')
+                    location.reload()
+                    }
+                else{
+                    alert('로그아웃 실패')
+                    }
+            }
+        })
+    }

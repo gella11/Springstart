@@ -36,3 +36,20 @@ function logout(){
             }
         })
     }
+
+// 회원목록
+list()
+function list(){
+    $.ajax({
+        url:"/member/list",
+        type : "get",
+        success: function(list){
+        console.log(list)
+            let html = '<tr> <th>번호</th> <th>이메일</th> <th>비밀번호</th> </tr>';
+            list.forEach( (m) =>{
+                html += '<tr> <th>'+m.mno+'</th> <th>'+m.meamil+'</th> <th>'+m.mpassword+'</th> </tr>'
+            })
+            document.querySelector('.mtable').innerHTML = html
+        }
+    })
+}

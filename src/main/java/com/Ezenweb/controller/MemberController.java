@@ -8,6 +8,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController // 해당 클래스가 controller 임을 명시 [스프링이 알아야함]
 @RequestMapping("/member") // 클래스 위에 넣으면 공통URL
@@ -22,7 +23,7 @@ public class MemberController {
     private MemberService memberService;
 
     
-    //----------------------------------------------------------------
+    //-------------------------------- 회원가입 --------------------------------
     // html 반환 매핑
     // 회원가입
     @GetMapping("/signup")
@@ -36,7 +37,7 @@ public class MemberController {
         return result;  // 2. 반환
     }
 
-    //----------------------------------------------------------------
+    //------------------------------- 로그인 ---------------------------------
     
     // html 반환 매핑
     // 로그인
@@ -55,7 +56,7 @@ public class MemberController {
 
 
 
-    //----------------------------------------------------------------
+    //---------------------------- 비밀번호 찾기 ------------------------------------
     // html 반환 매핑
     // 비밀번호 찾기 (이메일 입력시 비밀번호 보내줌)
     @GetMapping("/findpassword")
@@ -69,7 +70,7 @@ public class MemberController {
 
     }
 
-    //----------------------------------------------------------------
+    //------------------------------ 회원삭제 ----------------------------------
 
     // 회원삭제
     @GetMapping("/delete")
@@ -83,7 +84,7 @@ public class MemberController {
         // 2. 서비스 결과 반환
         return result;
     }
-    //----------------------------------------------------------------
+    //------------------------------- 비밀번호 수정 ---------------------------------
 
 
     // 비밀번호 수정
@@ -97,7 +98,7 @@ public class MemberController {
         int result = memberService.setupdate(mpassword);
         return result;
     }
-    //----------------------------------------------------------------
+    //-------------------------------- 인 덱 스 --------------------------------
     @GetMapping("/index")
     public Resource getindex(){
         return new ClassPathResource("templates/index.html");
@@ -113,6 +114,21 @@ public class MemberController {
         return result;
 
     }
+    //------------------------------ 회 원 목 록 ----------------------------------
+    // 8. 회원목록
+    @GetMapping("/list")
+    @ResponseBody
+    public List<MemberDto> list(){
+        List<MemberDto> list = memberService.list();
+        System.out.println("확인 ::: "+list);
+        return list;
+    }
 
-
+    //----------------------------- 메 일 보내기 -----------------------------------
+    // 9. 메일 보내기
+    @GetMapping("/getauth")
+    public String getauth( @RequestParam("toemail") String toemail ){
+        return memberService.getauth( toemail );
+        // return "456464";
+    }
 }

@@ -5,12 +5,18 @@ import com.Ezenweb.domain.entity.MemberEntity;
 import com.Ezenweb.domain.entity.MemberRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service // 해당 클래스가 Service 임을 명시
 public class MemberService {
@@ -18,6 +24,10 @@ public class MemberService {
     private MemberRepository memberRepository;
     @Autowired // 스프링 컨테이너[ 메모리 ]
     private HttpServletRequest request; // 요청 객체
+
+    // 메일전송 객체 (전역객체)
+    @Autowired
+    private JavaMailSender javaMailSender; //
 
     int mno = 0;
 
@@ -129,4 +139,75 @@ public class MemberService {
             return false;
         }
     }
+
+    // 8. 회원정보 호출
+    public List<MemberDto> list(){
+        // 1. JPA를 이용한 모든 엔티티 호출
+        List<MemberEntity> list =  memberRepository.findAll();
+        // 2. 엔티티 --> DTO
+        List<MemberDto> dtoList = new ArrayList<>();
+        for(MemberEntity entity : list) {
+            dtoList.add(entity.toDto());
+        }
+        return dtoList;
+    }
+
+    // 9. 인증코드 발송
+    public String getauth(String toemail){
+        String auth = ""; // 인증코드
+        String html = "<html><body><h1> EZENWEB 회원가입 인증코드여 </h1>";
+
+        Random random = new Random(); // 난수 객체 6번 회줜
+        for(int i = 0; i < 6; i++){
+            char randchar = (char)(random.nextInt(26)+97);   //97~122 영어 소문자
+            // char randchar2 = (char)random.nextInt(10)+48;      //48~57 숫자0~9
+            auth += randchar;
+        }
+        html +="<div>인증코드 : "+auth+"</div>";
+        html +="</body></html>";
+        meailsend(toemail, "EzenWeb 인증코드", html); // 메일전송
+        return auth;
+    }
+    // 9-2. 메일 전송 서비스
+    public void meailsend(String toemail, String title, String content){
+        // 외부 통신은 예외처리가 필요
+        try {
+            // 1. Mine프로토콜 객체 생성
+            MimeMessage message = javaMailSender.createMimeMessage();
+            // 2. Mime 설정                                             mime객체명   첨부파일 여부     인코딩타입
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "UTF-8");
+            // 3. 보내는사람 정보
+            mimeMessageHelper.setFrom("ajdksgd@naver.com" , "Ezenweb");
+            // 4. 받는사람 정보
+            mimeMessageHelper.setTo(toemail);
+            // 5. 메일 제목
+            mimeMessageHelper.setSubject(title);
+            // 6. 메일 내용 // HTML 형식
+            mimeMessageHelper.setText(content.toString(), true);
+            // 7. 메일 전송
+            javaMailSender.send(message);
+        }catch (Exception e){ System.out.println("메일전송 실패 :" + e); }
+    }
+
+
+    /*
+     메일전송
+     1) implementation 'org.springframework.boot:spring-boot-starter-mail' 라이브러리 필요
+     2) 보내는 사람 이메일 정보[ ]
+        네이버 기준 :
+            네이버로그인 -> 메일 -> 환경설정
+            POP3/IMAP 설정 -> 사용함
+            host port 정보 가져오기
+    */
+
+
+
+
+
+
+
+
+
+
+
 }

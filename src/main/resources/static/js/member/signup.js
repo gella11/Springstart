@@ -4,7 +4,8 @@
         alert('setmember')
         let info = {
             meamil : document.querySelector('.meamil').value,
-            mpassword : document.querySelector('.mpassword').value
+            mpassword : document.querySelector('.mpassword').value,
+            mphone : document.querySelector('.mphone').value
         }
 
         let timerbox = document.querySelector('.timerbox').innerHTML

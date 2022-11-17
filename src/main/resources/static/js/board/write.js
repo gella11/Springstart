@@ -3,8 +3,9 @@ alert('asd')
 function setboard(){
 
     let data = {
-        btitle : document.querySelector('.btitle').value
-        bcontent : document.querySelector('.bcontent').value
+        btitle : document.querySelector('.btitle').value,
+        bcontent : document.querySelector('.bcontent').value,
+        bfile : document.querySelector('.bfile').value
     }
 
     $.ajax({
@@ -12,7 +13,9 @@ function setboard(){
         type: "POST",
         data: JSON.stringify(data),
         contentType: "application/json",
-        success: function(re){alert('re')}
+        success: function(re){
+            alert('re')
+        }
     })
 }
 

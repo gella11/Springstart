@@ -11,27 +11,25 @@ import lombok.*;
 @ToString
 @Builder
 public class BoardDto {
-    private int bno;
-    private String btitle;
-    private String bcontent;
-    private int mno;            // fk
-    private int cno;            // fk 카테고리 번호
-    private int bview;
+    private int bno;            // 게시물번호
+    private String btitle;      // 게시물제목
+    private String bcontent;    // 게시물 내용
+    private int bview;          // 조회수
     private String bfile;       // 첨부파일
+    private int mno;            // 작성자[회원번호-fk]
+    private int bcno;           // 카테고리[ 카테고리-fk ]
+    private String memail;      //  회원아이디
 
-    // 1. 형변환
-    public BoardEntity toEntity() {
-        // 생성자를 이용한 객체 생성
-        // 순서 있음.
-        return new BoardEntity(
-                this.bno,
-                this.btitle,
-                this.bcontent,
-                this.mno,
-                this.cno,
-                this.bview,
-                this.bfile
-        );
+    //1. 형변환
+    public BoardEntity toEntity(){
+        // * 생성자를 이용한 객체 생성 [ *빌더패턴 비교 ]
+        return BoardEntity.builder()
+                .bno( this.bno )
+                .btitle( this.btitle )
+                .bcontent( this.bcontent )
+                .bview( this.bview )
+                .bfile( this.bfile )
+                .build();
     }
 
 }

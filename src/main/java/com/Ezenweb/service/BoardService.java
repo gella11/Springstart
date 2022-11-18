@@ -22,7 +22,7 @@ public class BoardService {
     @Transactional
     public boolean setboard(BoardDto boardDto){
         BoardEntity entity = boardRepository.save( boardDto.toEntity() );
-        if(entity.getMno() !=0){return true;}
+        if(entity.getBno() !=0){return true;}
         else                   {return false;}
     }
     @Transactional

@@ -1,6 +1,6 @@
 package com.Ezenweb.domain.dto;
 
-import com.Ezenweb.domain.entity.BoardEntity;
+import com.Ezenweb.domain.entity.Board.BoardEntity;
 import lombok.*;
 
 // 롬복 : 생성자, get/set , toString , 필더패턴(안전성)

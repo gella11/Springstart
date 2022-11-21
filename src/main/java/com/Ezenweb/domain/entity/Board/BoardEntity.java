@@ -1,4 +1,4 @@
-package com.Ezenweb.domain.entity;
+package com.Ezenweb.domain.entity.Board;
 
 
 

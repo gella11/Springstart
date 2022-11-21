@@ -1,6 +1,7 @@
-package com.Ezenweb.domain.entity;
+package com.Ezenweb.domain.entity.Board;
 
 
+import com.Ezenweb.domain.dto.BcategoryDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,4 +27,11 @@ public class BcategoryEntity {
     @Builder.Default
     private List<BoardEntity> boardEntityList
             =new ArrayList<>();
+
+    public BcategoryDto toDto(){
+        return BcategoryDto.builder()
+                .bcno(this.bcno)
+                .bcname(this.bcname)
+                .build();
+    }
 }

@@ -22,19 +22,16 @@ public class NboardEntity {
     private String vcontent;
     @Column(nullable = false)
     private String vname;
-    @Column(nullable = false)
-    private int vcno;
+
 
     @ManyToOne
-    @JoinColumn(name="vcno",insertable = false,
-            updatable = false)
+    @JoinColumn(name="vcno")
     @ToString.Exclude
     private NBcategoryEntity nBcategoryEntity;
 
     public NBoardDto toDto(){
         return NBoardDto.builder()
                 .vno(this.vno)
-                .vcno(this.vcno)
                 .vcontent(this.vcontent)
                 .vname(this.vname)
                 .build();

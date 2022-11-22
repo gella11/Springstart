@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 public class NBcategoryEntity {
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int vcno;       // 비회원 카테고리 번호
     private String vname;   // 비회원 카테고리 이름
 

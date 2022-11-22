@@ -33,6 +33,7 @@ public class NonBoardController {
     // 카테고리 등록
     @PostMapping("/cadd")
     public boolean cadd(@RequestBody NBcategoryDto nBcategoryDto){
+
         return nboardService.cadd(nBcategoryDto);
     }
     
@@ -42,16 +43,34 @@ public class NonBoardController {
         return nboardService.clist();
     }
 
-    // 1) index
-    // 2) 카테고리 등록
-    // 3) 방문록 전체출력
-    // 4) 삭제 / 수정
-
-
     // 방명록 등록
     @PostMapping("/vadd")
     public boolean vadd(@RequestBody NBoardDto nBoardDto){
+        System.out.println(nBoardDto.getVcno());
+        System.out.println(nBoardDto.getVcontent());
+        System.out.println(nBoardDto.getVname());
         return nboardService.vadd(nBoardDto);
     }
+
+    // 방명록 출력
+    @GetMapping("/vlist")
+    public List<NBoardDto> vlist(@RequestParam int vcno){
+        return nboardService.vlist(vcno);
+    }
+
+    // 내용 수정
+    @PutMapping("/vupdate")
+    public boolean vupdate(@RequestBody NBoardDto nBoardDto){
+        return nboardService.vupdate(nBoardDto);
+    }
+
+    // 방명록 삭제
+    @DeleteMapping("/vdelete")
+    public boolean vdelete( @RequestParam int vno ){
+        return nboardService.vdelete( vno );
+    }
+
+
+
 
 }

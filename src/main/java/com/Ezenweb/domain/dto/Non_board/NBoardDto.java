@@ -3,6 +3,8 @@ package com.Ezenweb.domain.dto.Non_board;
 import com.Ezenweb.domain.entity.Non_board.NboardEntity;
 import lombok.*;
 
+import javax.persistence.Id;
+
 @NoArgsConstructor  // 깡통 생성자
 @AllArgsConstructor // 풀 생성자
 @Getter
@@ -22,7 +24,6 @@ public class NBoardDto {
                 .vno(this.vno)
                 .vcontent(this.vcontent)
                 .vname(this.vname)
-                .vcno(this.vcno)
                 .build();
     }
 

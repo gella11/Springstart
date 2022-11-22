@@ -3,6 +3,8 @@ package com.Ezenweb.domain.dto.Non_board;
 import com.Ezenweb.domain.entity.Non_board.NBcategoryEntity;
 import lombok.*;
 
+import javax.persistence.Id;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

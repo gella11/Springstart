@@ -1,7 +1,29 @@
 // -------------- 전역변수 -----------------//
 let bcno = 2; // 카테고리 번호   // 카테고리 기본값 = 자유게시판
 
-// 1. 게시물 등록 메소드
+// 1. 게시물 등록 메소드 ♨첨부파일
+function setboard(){
+
+    let boardform = document.querySelector('.boardform')
+    let formdata = new FormData(boardform);
+    formdata.set("bcno" , bcno) // 폼 데이터에 데이터 추가 . 기존 폼 전체랑 set한 bcno 같이 담김
+
+    $.ajax({
+        url : "/board/setboard",
+        type : "post",
+        data : formdata,
+        contentType : false,
+        processData : false,
+        success : function(re) {
+            if( re == true){
+                alert('글작성성공');
+                location.href="/board/list";
+            }
+            else{ alert("글작성실패"); }
+        }
+    })
+}
+/*// 1. 게시물 등록 메소드
 function setboard(){
     let data = {
         btitle : document.querySelector('.btitle').value ,
@@ -13,7 +35,7 @@ function setboard(){
         url : "/board/setboard",
         type : "post",
         data : JSON.stringify(data) ,
-        contentType : "application/json",
+        contentType : "false",
         success : function(re) {
             if( re == true){
                 alert('글작성성공');
@@ -22,7 +44,7 @@ function setboard(){
             else{ alert("글작성실패"); }
         }
     })
-}
+}*/
 // 2. 게시물 카테고리 등록 메소드
 function setbcategory(){
     let data = { bcname : document.querySelector(".bcname").value }

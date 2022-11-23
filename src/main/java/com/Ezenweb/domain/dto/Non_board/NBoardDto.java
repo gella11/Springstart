@@ -2,6 +2,7 @@ package com.Ezenweb.domain.dto.Non_board;
 
 import com.Ezenweb.domain.entity.Non_board.NboardEntity;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Id;
 
@@ -17,6 +18,7 @@ public class NBoardDto {
     private String vcontent;    // 방명록 내용
     private String vname;       // 방명록 작성자
     private int vcno;           // 카테고리[ 카테고리-fk ]
+    private MultipartFile vfile;
 
     // 1. 형변환
     public NboardEntity toEntity() {

@@ -22,6 +22,8 @@ public class NboardEntity {
     private String vcontent;
     @Column(nullable = false)
     private String vname;
+    @Column
+    private String vfile;
 
 
     @ManyToOne

@@ -58,6 +58,24 @@ function v_add(){
             }
     })
 }
+// 방문록 추가 [ 첨부파일 ]
+function v_add(){
+
+    let formbox = document.querySelector('.formbox')
+    let formdata = new FormData(formbox)
+    formdata.set("vcno",vcno)
+
+    $.ajax({
+            url:"/nonboard/vadd",
+            type : "POST",
+            data : formdata,
+            contentType : false,
+            processData : false,
+            success : function(re){
+                v_list();
+            }
+    })
+}
 
 // 방문록 리스트 출력
 v_list()
@@ -73,13 +91,29 @@ function v_list(){
                 html +=
                  '<tr>  <td> '+v.vno+' </td> <td >'+v.vcontent+' </td> <td> '+v.vname+' </td> '
                 +'<td> <button type="button" onclick="upinput('+v.vno+')"> 수정 </button></td> '
-                +'<td> <button type="button" onclick="vdelete('+v.vno+')"> 삭제 </button> </td> </tr>'
+                +'<td> <button type="button" onclick="vdelete('+v.vno+')"> 삭제 </button> </td> '
+                +'<td> <button type="button" onclick="download('+v.vno+')"> 첨부파일 </button> </td> </tr>'
                 +'<tr> <td></td> <td class="a'+v.vno+'"></td> <td></td> <tr>'
+
             })
             document.querySelector(".vlist").innerHTML = html;
 
         }
     })
+}
+
+function download (vno){
+
+    alert("다운로드 시작합니다.")
+
+    $.ajax({
+        url : "nonboard/filedownload",
+        data : {"vno" : vno},
+        success : function(re){
+              alert("뻥션까지 통과")
+        }
+    })
+
 }
 // 수정 input 상자 생겨버리기
 function upinput(vno){
@@ -131,3 +165,4 @@ function vdelete(vno){
         }
     })
 }
+

@@ -7,16 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.io.*;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service // 컴포넌트 [ Stpring MVC ]
 public class BoardService {
     // ------------1.전역변수---------------//
     @Autowired
     private HttpServletRequest request; // 요청 객체 선언
+    @Autowired
+    private HttpServletResponse response; // 응답 객체 선언
     @Autowired
     private MemberRepository memberRepository; // 회원 리포지토리 객체 선언
     @Autowired
@@ -26,6 +32,9 @@ public class BoardService {
     @Autowired
     private BcategoryRepository bcategoryRepository;
 
+    String path = "C:\\Users\\504\\Desktop\\spring\\Springstart\\src\\main\\resources\\static\\bupload\\";
+    
+    
     // @Transactional : 엔티티 DML 적용 할때 사용되는 어노테이션
     // 1. 메소드
             /*
@@ -35,7 +44,42 @@ public class BoardService {
                 4. delete : boardRepository.delete( 삭제할엔티티 )
              */
     // ------------ 2. 서비스 ------------- //
+    
+    // 0. 첨부파일 다운로드
+    public void filedownload( String filename) {
+        // uuid 제거
+        String realfile = filename.split("_")[1];
+        // 1. 경로 찾기
+        String filepath = path+filename;
+        // 2. 헤더 구성
+        try{
+            response.setHeader(
+                    "Content-Disposition",  // 다운로드 형식 [브라우저 마다 다름 ]
+                    "attachment; filename=" + URLEncoder.encode(realfile, "UTF-8")); // 다운로드에 표시될 파일명
 
+            File file = new File(filepath);
+
+            // 3. 파일 다운로드 스트림[]
+            // 1) 다운로드 할 파일 바이트 읽어오기
+            BufferedInputStream fin = new BufferedInputStream(new FileInputStream(file));
+            // 2) 읽어온 바이트 저장
+            byte[] bytes = new byte[ (int)file.length()];
+            // 3) 파일의 길이만큼 읽어와서 배열에 저장
+            fin.read(bytes);
+            // 4) 출력 스트림 객체 선언
+            BufferedOutputStream fout = new BufferedOutputStream(response.getOutputStream());
+            // 5) 응답하기 [ 내보내기 ]
+            fout.write(bytes);
+            //♨ 6) 버퍼 초기화 |or| 스트림 닫기
+            fout.flush(); fout.flush(); fin.close();
+        }
+        catch( Exception e ){System.out.println("다운로드 오류"+e);}
+
+
+    }
+
+    
+    
     // 1. 게시물 쓰기
     @Transactional
     public boolean setboard( BoardDto boardDto ){
@@ -50,6 +94,28 @@ public class BoardService {
         // --------------------------  //
         BoardEntity boardEntity  = boardRepository.save( boardDto.toEntity() );  // 1. dto --> entity [ INSERT ] 저장된 entity 반환
         if( boardEntity.getBno() != 0 ){   // 2. 생성된 entity의 게시물번호가 0 이 아니면  성공
+
+            // MultipartFile 인터페이
+                // 1) .getOriginalFilename() : 해당 인터페이스에 연결(주소)된 파일의 이름 호출
+                // 2) .transferTo() : 파일이동[ 사용자pc ---> 개발자 pc]
+                    // .transferTo( 파일객체)
+
+            // ♨ 첨부파일 등록
+            String filename = boardDto.getBfile().getOriginalFilename();    // 업로드 된 파일의 이름
+
+            // 업로드 된 파일의 이름 [ 문제점 : 파일명 중복 ]
+            String uuid = UUID.randomUUID().toString(); // 난수 생성
+            // 확장자가 깨지므로 앞에 넣음.
+            filename += uuid+"_"+boardDto.getBfile().getOriginalFilename(); // 난수 + 파일명
+
+            boardEntity.setBfile(filename);                                 // 해당 파일명 엔티티에 저장
+            
+            try {
+                boardDto.getBfile().transferTo(new File(path + filename));
+                }
+            catch (Exception e){System.out.println("첨부파일 오류"+e);}
+
+
             // 1. 회원 <---> 게시물 연관관계 대입
             boardEntity.setMemberEntity( memberEntity ); // ***!!!! 5. fk 대입
             memberEntity.getBoardEntityList().add( boardEntity); // *** 양방향 [ pk필드에 fk 연결 ]
@@ -106,7 +172,7 @@ public class BoardService {
             // * 수정처리 [ 메소드 별도 존재x /  엔티티 객체 <--매핑--> 레코드 / 엔티티 객체 필드를 수정 : @Transactional ]
             entity.setBtitle( boardDto.getBtitle() );
             entity.setBcontent( boardDto.getBcontent()) ;
-            entity.setBfile( boardDto.getBfile() );
+            //entity.setBfile( boardDto.getBfile() );
             return true;
         }else{  return false;  }
     }

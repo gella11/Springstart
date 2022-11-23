@@ -14,9 +14,12 @@
     <div class="c_list"> </div>
 
     <h3> 방문록 쓰기 </h3>
-    작성자 : <input type="text" class="vcontent"><br>
-    내용 : <input type="text" class="vname"><br>
-    <button type="button" onclick="v_add()"> 방문록 쓰기</button>
+    <form class="formbox">
+        작성자 : <input type="text" name="vcontent"><br>
+        내용 : <input type="text" name="vname"><br>
+        첨파 : <input type="file" name="vfile"><br>
+        <button type="button" onclick="v_add()"> 방문록 쓰기</button>
+    </form>
 
     <table class="vlist"></table>
 

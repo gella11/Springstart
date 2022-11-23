@@ -44,12 +44,19 @@ public class NonBoardController {
     }
 
     // 방명록 등록
-    @PostMapping("/vadd")
+    /*@PostMapping("/vadd")
     public boolean vadd(@RequestBody NBoardDto nBoardDto){
-        System.out.println(nBoardDto.getVcno());
-        System.out.println(nBoardDto.getVcontent());
-        System.out.println(nBoardDto.getVname());
         return nboardService.vadd(nBoardDto);
+    }*/
+    // 방명록 등록 [ 첨부파일
+    @PostMapping("/vadd")
+    public boolean vadd( NBoardDto nBoardDto){
+        return nboardService.vadd(nBoardDto);
+    }
+    // 첨부파일 다운로드
+    @GetMapping("/filedownload")
+    public void filedownload(@RequestParam("vno") int vno){
+        nboardService.filedownload(vno);
     }
 
     // 방명록 출력

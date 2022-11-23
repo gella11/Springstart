@@ -13,20 +13,32 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class NboardService {
     @Autowired
     private HttpServletRequest request;
-
+    @Autowired
+    private HttpServletResponse response;
     @Autowired
     private NBcategoryRepository nBcategoryRepository;
     @Autowired
     private NBoardRepository nBoardRepository;
+    @Autowired
+    private NboardEntity nBoardEntity;
+
+    String path = "C:\\Users\\504\\Desktop\\spring\\Springstart\\src\\main\\resources\\static\\nbupload";
 
 
     // 1. 카테고리 등록
@@ -46,7 +58,7 @@ public class NboardService {
     }
 
     // 3. 방명록 등록
-    @Transactional
+    /*@Transactional
     public boolean vadd( NBoardDto nBoardDto){
         Optional<NBcategoryEntity> optional = nBcategoryRepository.findById( nBoardDto.getVcno() );
             System.out.println("getVcno():::"+nBoardDto.getVcno());
@@ -63,8 +75,62 @@ public class NboardService {
             nBcategoryEntity.getNboardEntityList().add( nboardEntity);
             return true;
         }
-
         else{ return false;}
+    }*/
+
+    // 3. 방명록 등록 [ 첨부파일 등록]
+    @Transactional
+    public boolean vadd( NBoardDto nBoardDto){
+        Optional<NBcategoryEntity> optional = nBcategoryRepository.findById( nBoardDto.getVcno() );
+        System.out.println("getVcno():::"+nBoardDto.getVcno());
+        System.out.println("optional:::"+optional);
+        if ( !optional.isPresent()) { return false;}
+        NBcategoryEntity nBcategoryEntity = optional.get();
+        System.out.println("nBcategoryEntity:::"+nBcategoryEntity);
+
+        NboardEntity nboardEntity = nBoardRepository.save( nBoardDto.toEntity());
+        if( nboardEntity.getVno() != 0){
+
+            String filename = nBoardDto.getVfile().getOriginalFilename();
+            String uuid = UUID.randomUUID().toString();                       // 난수 생성
+            filename += uuid+"-"+ nBoardDto.getVfile().getOriginalFilename(); // 난수 + 파일명
+            nboardEntity.setVfile(filename);
+
+            try{
+                nBoardDto.getVfile().transferTo(new File(path + filename));
+            }
+            catch( Exception e){System.out.println("비회원 게시판 첨부파일 포함 글쓰기 오류 :" + e);}
+
+            nboardEntity.setNBcategoryEntity( nBcategoryEntity);
+            nBcategoryEntity.getNboardEntityList().add( nboardEntity);
+            return true;
+        }
+        else{ return false;}
+    }
+
+    // 첨부파일 다운로드
+    public void filedownload(int vno){
+        NboardEntity entity = nBoardRepository.findById(vno).get();
+        String vfile = entity.getVfile();
+
+        String realfile = vfile.split("_")[1];
+        String filepath = path+vfile;
+        try{
+            response.setHeader(
+                    "Content-Disposition",
+                    "attachment; filename="+ URLEncoder.encode(realfile, "UTF-8")
+            );
+
+            File file  = new File(filepath);
+
+            BufferedInputStream fin = new BufferedInputStream(new FileInputStream(file));
+            byte[] bytes = new byte[(int)file.length()];
+            fin.read(bytes);
+            BufferedOutputStream fout = new BufferedOutputStream(response.getOutputStream());
+            fout.write(bytes);
+            fout.flush(); fout.flush(); fin.close();
+        }
+        catch ( Exception e){System.out.println("다운로드 오류"+e);}
     }
 
 

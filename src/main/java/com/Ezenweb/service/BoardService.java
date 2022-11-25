@@ -4,6 +4,10 @@ import com.Ezenweb.domain.dto.BcategoryDto;
 import com.Ezenweb.domain.dto.BoardDto;
 import com.Ezenweb.domain.entity.Board.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,10 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.*;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service // 컴포넌트 [ Stpring MVC ]
 public class BoardService {
@@ -32,7 +33,7 @@ public class BoardService {
     @Autowired
     private BcategoryRepository bcategoryRepository;
 
-    String path = "C:\\Users\\504\\Desktop\\spring\\Springstart\\src\\main\\resources\\static\\bupload\\";
+    String path = "C:\\Users\\504\\Desktop\\Spring\\Springstart\\src\\main\\resources\\static\\bupload\\";
     
     
     // @Transactional : 엔티티 DML 적용 할때 사용되는 어노테이션
@@ -133,17 +134,54 @@ public class BoardService {
     }
     // 2. 게시물 목록 조회
     @Transactional
-    public List<BoardDto> boardlist( int bcno ){
-        List<BoardEntity> elist = null;
-        if( bcno == 0 ){   elist = boardRepository.findAll();   } // 카테고리번호가 0 이면 전체보기
-        else{  // 카테고리번호가 0이 아니면 선택된 카테고리별 보기
-            BcategoryEntity bcEntity =  bcategoryRepository.findById( bcno ).get();
-            elist  = bcEntity.getBoardEntityList(); // 해당 엔티티의 게시물목록
+    public List<BoardDto> boardlist( int bcno , int page ,String key, String keyword){
+        Page<BoardEntity> elist = null; // ♨  자료형  Page
+
+        // pageable import 시 ♨domain 꺼 쓰기
+        // PageRequest.of( 현재페이지번호 , 표시할 레코드 수  , 정렬 )
+        // [ 정렬 ], Sort.by(Sort.Direction.DESC, "bno")
+        // page는 0부터 시작이라 -1 해줌
+        Pageable pageable =  PageRequest.of( page-1 , 10 ,Sort.by(Sort.Direction.DESC, "bno") );
+
+        // 3. 검색여부 판단ㄷ
+        if(key.equals("btitle")){ // 검색필드가 제목이면
+            elist = boardRepository.findbybtitle( bcno , keyword, pageable);
+        }else if(key.equals("bcontent")){ // 검색필드가 내용이면
+            elist = boardRepository.findbybcontent( bcno , keyword, pageable);
+        }else{ // 검색이 없으면
+            if(bcno == 0){elist = boardRepository.findAll( pageable ); }
+            else         {elist = boardRepository.findBybcno(bcno , pageable);}
+
         }
+
+        // 1_ 프론트엔드에 표시할 페이징번호 버튼 수
+        int btncount = 5; // 페이지에 표시할 총 페이지 버튼 개수
+        // 2_ [시작] [끝] 번호 버튼
+        int startbtn = (page/btncount) * btncount +1;
+        int endbtn = startbtn + btncount -1;
+        if(endbtn > elist.getTotalPages()) {endbtn = elist.getTotalPages();}
+
+
+
+        /*if( bcno == 0 ){   elist = boardRepository.findAll( pageable );   } // 카테고리번호가 0 이면 전체보기
+        else{  // 카테고리번호가 0이 아니면 선택된 카테고리별 보기
+            //[ after 페이징처리 ]
+            elist = boardRepository.findBybcno( bcno , pageable );
+            //[ before 페이징처리 ]
+            //BcategoryEntity bcEntity =  bcategoryRepository.findById( bcno ).get();
+            //elist  = bcEntity.getBoardEntityList(); // 해당 엔티티의 게시물목록
+        }*/
+
+
         List<BoardDto> dlist = new ArrayList<>(); // 2. 컨트롤에게 전달할때 형변환[ entity->dto ] : 역할이 달라서
         for( BoardEntity entity : elist ){ // 3. 변환
             dlist.add( entity.toDto() );
         }
+
+        dlist.get(0).setStartbtn( startbtn );
+        dlist.get(0).setEndbtn( endbtn );
+
+
         return dlist;  // 4. 변환된 리스트 dist 반환
     }
     // 3. 게시물 개별 조회

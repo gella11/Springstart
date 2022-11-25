@@ -19,6 +19,7 @@ public class NBoardDto {
     private String vname;       // 방명록 작성자
     private int vcno;           // 카테고리[ 카테고리-fk ]
     private MultipartFile vfile;
+    private String vfilename;
 
     // 1. 형변환
     public NboardEntity toEntity() {

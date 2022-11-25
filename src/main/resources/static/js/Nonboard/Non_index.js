@@ -42,7 +42,7 @@ function bcnochage( cno ){ vcno = cno; alert( vcno ); c_list();v_list();  }
 
 
 // 방문록 추가
-function v_add(){
+/*function v_add(){
     let data = {
             vcontent : document.querySelector('.vcontent').value,
             vname : document.querySelector('.vname').value,
@@ -57,7 +57,7 @@ function v_add(){
                 v_list();
             }
     })
-}
+}*/
 // 방문록 추가 [ 첨부파일 ]
 function v_add(){
 
@@ -79,6 +79,7 @@ function v_add(){
 
 // 방문록 리스트 출력
 v_list()
+let vfilename1 ='';
 function v_list(){
     $.ajax({
         url:"/nonboard/vlist",
@@ -88,12 +89,16 @@ function v_list(){
 
             let html = '<tr>  <th> 번호 </th> <th> 내용 </th> <th> 작성자 </th></tr>';
             re.forEach( (v) => {
+            let vfilename = v.vfilename
+            abc = vfilename
                 html +=
                  '<tr>  <td> '+v.vno+' </td> <td >'+v.vcontent+' </td> <td> '+v.vname+' </td> '
                 +'<td> <button type="button" onclick="upinput('+v.vno+')"> 수정 </button></td> '
                 +'<td> <button type="button" onclick="vdelete('+v.vno+')"> 삭제 </button> </td> '
-                +'<td> <button type="button" onclick="download('+v.vno+')"> 첨부파일 </button> </td> </tr>'
+                +'<td> <a href="http://localhost:8080/nonboard/filedownload?vfilename='+v.vfilename+'"> 첨부파일 </a></button> </td> </tr>'
                 +'<tr> <td></td> <td class="a'+v.vno+'"></td> <td></td> <tr>'
+                console.log(v)
+
 
             })
             document.querySelector(".vlist").innerHTML = html;
@@ -102,14 +107,17 @@ function v_list(){
     })
 }
 
-function download (vno){
 
+function downloadd(vno){
+    alert(vno)
     alert("다운로드 시작합니다.")
 
     $.ajax({
         url : "nonboard/filedownload",
         data : {"vno" : vno},
+        type : "GET",
         success : function(re){
+                alert(re)
               alert("뻥션까지 통과")
         }
     })

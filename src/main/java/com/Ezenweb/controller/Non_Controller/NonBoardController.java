@@ -48,16 +48,21 @@ public class NonBoardController {
     public boolean vadd(@RequestBody NBoardDto nBoardDto){
         return nboardService.vadd(nBoardDto);
     }*/
+
     // 방명록 등록 [ 첨부파일
     @PostMapping("/vadd")
     public boolean vadd( NBoardDto nBoardDto){
         return nboardService.vadd(nBoardDto);
     }
+
     // 첨부파일 다운로드
-    @GetMapping("/filedownload")
-    public void filedownload(@RequestParam("vno") int vno){
-        nboardService.filedownload(vno);
-    }
+     @GetMapping("/filedownload")
+     public boolean filedownload(@RequestParam("vfilename") String vfilename){
+        System.out.println("오긴오냐??");
+         System.out.println("오긴오냐??"+vfilename);
+         boolean result = nboardService.filedownload(vfilename);
+         return result;
+     }
 
     // 방명록 출력
     @GetMapping("/vlist")

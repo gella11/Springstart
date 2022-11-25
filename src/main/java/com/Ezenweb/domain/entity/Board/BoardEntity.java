@@ -55,6 +55,7 @@ public class BoardEntity {
                 .bview( this.bview )
                 //.bfile( this.bfile )
                 .memail( this.memberEntity.getMemail() )
+                .bfilename(this.bfile)
                 .build();
     }
 

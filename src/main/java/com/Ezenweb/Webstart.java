@@ -1,12 +1,17 @@
 package com.Ezenweb;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
-@SpringBootApplication // 스프링 웹 위한 기본 설정 어노테이션
+@SpringBootApplication
+// 스프링 웹 위한 기본 설정 어노테이션
+
 public class Webstart {
     public static void main(String[] args){
         SpringApplication.run(Webstart.class);
+
             // 스프링 어플리케잉션 실행[현재클래스명.class ]
     }
 }

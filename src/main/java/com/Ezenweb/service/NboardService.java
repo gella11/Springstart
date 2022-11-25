@@ -1,16 +1,13 @@
 package com.Ezenweb.service;
 
-import com.Ezenweb.domain.dto.BoardDto;
 import com.Ezenweb.domain.dto.Non_board.NBcategoryDto;
 import com.Ezenweb.domain.dto.Non_board.NBoardDto;
-import com.Ezenweb.domain.entity.Board.BoardEntity;
 import com.Ezenweb.domain.entity.Non_board.NBcategoryEntity;
 import com.Ezenweb.domain.entity.Non_board.NBcategoryRepository;
 import com.Ezenweb.domain.entity.Non_board.NBoardRepository;
 import com.Ezenweb.domain.entity.Non_board.NboardEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,10 +32,9 @@ public class NboardService {
     private NBcategoryRepository nBcategoryRepository;
     @Autowired
     private NBoardRepository nBoardRepository;
-    @Autowired
-    private NboardEntity nBoardEntity;
 
-    String path = "C:\\Users\\504\\Desktop\\spring\\Springstart\\src\\main\\resources\\static\\nbupload";
+
+    String path = "C:\\Users\\504\\Desktop\\spring\\Springstart\\src\\main\\resources\\static\\nbupload\\";
 
 
     // 1. 카테고리 등록
@@ -67,7 +63,7 @@ public class NboardService {
         NBcategoryEntity nBcategoryEntity = optional.get();
             System.out.println("nBcategoryEntity:::"+nBcategoryEntity);
 
-        NboardEntity nboardEntity = nBoardRepository.save( nBoardDto.toEntity());
+        nBoardEntity nboardEntity = nBoardRepository.save( nBoardDto.toEntity());
             System.out.println("nboardEntity:::"+nboardEntity);
             System.out.println("nboardEntity.getVno():::"+nboardEntity.getVno() );
         if( nboardEntity.getVno() != 0){
@@ -82,8 +78,6 @@ public class NboardService {
     @Transactional
     public boolean vadd( NBoardDto nBoardDto){
         Optional<NBcategoryEntity> optional = nBcategoryRepository.findById( nBoardDto.getVcno() );
-        System.out.println("getVcno():::"+nBoardDto.getVcno());
-        System.out.println("optional:::"+optional);
         if ( !optional.isPresent()) { return false;}
         NBcategoryEntity nBcategoryEntity = optional.get();
         System.out.println("nBcategoryEntity:::"+nBcategoryEntity);
@@ -91,9 +85,8 @@ public class NboardService {
         NboardEntity nboardEntity = nBoardRepository.save( nBoardDto.toEntity());
         if( nboardEntity.getVno() != 0){
 
-            String filename = nBoardDto.getVfile().getOriginalFilename();
             String uuid = UUID.randomUUID().toString();                       // 난수 생성
-            filename += uuid+"-"+ nBoardDto.getVfile().getOriginalFilename(); // 난수 + 파일명
+            String filename = uuid+"_"+ nBoardDto.getVfile().getOriginalFilename(); // 난수 + 파일명
             nboardEntity.setVfile(filename);
 
             try{
@@ -109,12 +102,19 @@ public class NboardService {
     }
 
     // 첨부파일 다운로드
-    public void filedownload(int vno){
-        NboardEntity entity = nBoardRepository.findById(vno).get();
-        String vfile = entity.getVfile();
+    public boolean filedownload(String vfilename){
 
-        String realfile = vfile.split("_")[1];
-        String filepath = path+vfile;
+       // Optional<NboardEntity> optional = nBoardRepository.findById(vno);
+       // NboardEntity nboardEntity = optional.get();
+       // System.out.println("nboardEntity★★★: " + nboardEntity);
+
+       //  String vfilename = nboardEntity.getVfile();
+        // System.out.println("vfilename★★★: " + vfilename);
+
+
+        String realfile = vfilename.split("_")[1];
+        String filepath = path+realfile;
+        System.out.println("♨"+realfile);
         try{
             response.setHeader(
                     "Content-Disposition",
@@ -129,8 +129,10 @@ public class NboardService {
             BufferedOutputStream fout = new BufferedOutputStream(response.getOutputStream());
             fout.write(bytes);
             fout.flush(); fout.flush(); fin.close();
+            return true;
         }
         catch ( Exception e){System.out.println("다운로드 오류"+e);}
+        return false;
     }
 
 

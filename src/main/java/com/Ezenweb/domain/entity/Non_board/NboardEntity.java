@@ -36,6 +36,7 @@ public class NboardEntity {
                 .vno(this.vno)
                 .vcontent(this.vcontent)
                 .vname(this.vname)
+                .vfilename(this.vfile)
                 .build();
     }
 

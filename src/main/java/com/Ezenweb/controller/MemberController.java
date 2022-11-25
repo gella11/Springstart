@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:3000") // 요청 포트 변경 어노테이션 // 3000번대가 여기를 들어올 수 있게끔 해줌
 @RestController // 해당 클래스가 controller 임을 명시 [스프링이 알아야함]
 @RequestMapping("/member") // 클래스 위에 넣으면 공통URL
 public class MemberController {

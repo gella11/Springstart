@@ -16,7 +16,8 @@ public class BoardDto {
     private String btitle;      // 게시물제목
     private String bcontent;    // 게시물 내용
     private int bview;          // 조회수
-    private MultipartFile bfile;       // 첨부파일
+    private MultipartFile bfile;       // 첨부파일 [쓰기용]
+    private String bfilename;           // 첨부파일 [호출용]
 
 
     private int mno;            // 작성자[회원번호-fk]

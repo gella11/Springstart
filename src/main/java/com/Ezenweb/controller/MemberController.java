@@ -42,11 +42,11 @@ public class MemberController {
         int result = memberService.setmember( memberDto ); // 1. 서비스[ 비지니스 로직 ] 호출
         return result;  // 2. 반환
     }
-    @PostMapping("/getmember") // 2.로그인 기능
+    /*@PostMapping("/getmember") // 2.로그인 기능 ♨// 시큐리티 사용시 필요 없음
     public int getmember( @RequestBody MemberDto memberDto ){
         int result = memberService.getmember( memberDto );
         return result;
-    }
+    }*/ // 시큐리티 사용시 필요 없음
     @GetMapping("/getpassword") // 3.패스워드 찾기
     public String getpassword( @RequestParam("memail") String memail ){
         String result = memberService.getpassword( memail );

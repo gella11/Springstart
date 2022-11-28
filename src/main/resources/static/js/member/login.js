@@ -1,6 +1,6 @@
 
 
-        function getlogin(){
+       /* function getlogin(){
             let info ={
                 memail : document.querySelector('.memail').value,
                 mpassword : document.querySelector('.mpassword').value
@@ -15,4 +15,4 @@
 
                 }
             })
-        }
+        }*/

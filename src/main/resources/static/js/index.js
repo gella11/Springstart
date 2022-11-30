@@ -4,8 +4,9 @@ function button(){
         url:"/member/getloginMno",
         type:"get",
         success: function(re){
-        if(re !=0){
-            html = '<button type="button" onclick="logout()"> 로그아웃 </button>'
+        let html = ""
+        if(re !== "" ){
+            html = '<a href="/member/logout"><button type="button"> 로그아웃 </button> </a>'
                   +'<a href="/member/findpassword"><button type="button"> 비밀번호 찾기</button></a>'
                   +'<a href="/member/update"><button type="button"> 비밀번호 수정</button></a>'
                   +'<a href="/member/delete"><button type="button"> 회원탈퇴</button></a>'

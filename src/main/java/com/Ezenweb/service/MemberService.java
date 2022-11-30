@@ -7,18 +7,93 @@ import com.Ezenweb.domain.entity.Board.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service // 해당 클래스가 Service 임을 명시
-public class MemberService {
+public class MemberService implements UserDetailsService {
+
+
+
+
+    // 2.[ 시큐리티 사용시 ] 로그인 인증 메소드 재정의 [ 오버라이드 ]
+    @Override
+    public UserDetails loadUserByUsername(String memail) throws UsernameNotFoundException {
+        // 1. 입력받은 아이디 [ memail ] 로 찾기
+        // Optional<MemberEntity> optional = memberRepository.findByMemail(memail);
+        // if(optional.isPresent()){ return null;}
+
+        // .orElseThrow 검색 결과가 없으면 화살표함수[람다식]를 이용
+        // 아니면 isPresent 쓰셈.
+        // 람다식을 쓰는 이유 : 간결해지니까.
+        MemberEntity memberEntity = memberRepository.findByMemail(memail).orElseThrow( ()-> new UsernameNotFoundException("사용자가 존재하지 않습니다.") );
+
+        // 2. 토큰 생성 [ 일반 유저 ]
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority( memberEntity.getMrol() ) ); // 토큰정보에 일반회원 내용 넣기
+
+
+        // MemberEntity memberEntity = optional.get();
+
+        MemberDto memberDto = memberEntity.toDto();
+        memberDto.setAuthorities(authorities);
+        return memberDto; // memberDto는 UserDetails의 구현체. 구현객체
+        // 구현체 : 해당 인터페이스의 추상메소드[구현 전 선언만 한 것]를 구현한 클래스의 객체
+
+    }
+
+    // 6. 로그인 여부 판단 메소드 [ principal 세션 이용 ]
+    public String getloginMno(){
+        // 1. 인증된 토큰 확인
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 2. 인증된 토큰 내용 확인
+        Object principal= authentication.getPrincipal();
+        System.out.println("토큰 내용 확인 ::: " + principal);
+        // 3. 토큰 내용에 따른 제어
+        if(principal.equals("anonymousUser")){ // 로그인 전
+            return null;
+        }else{                                  // anonymousUser 아니면 로그인 후
+            MemberDto memberDto = (MemberDto) principal;
+            // 등급 있다면
+            //if( memberDto.getAttribute().contains("일반회원") ){}
+            //else if(memberDto.getAuthorities().contains("관리자") ){}
+            return memberDto.getMemail();
+        }
+    }
+
+    // 1. 회원가입
+    @Transactional
+    public int setmember(MemberDto memberDto ){
+        // DB 관리자가 패스워드 보면 안됭께
+        // 암호화 [ 시큐리티 제공] [ bcrypt ]
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        memberDto.setMpassword(passwordEncoder.encode(memberDto.getPassword() ) ); // 암호화 된 것은 String
+
+        // 1. DAO 처리 [ insert ]
+        MemberEntity entity = memberRepository.save( memberDto.toEntity() );
+        // memberRepository.save( 엔티티 객체 ) : 해당 엔티티 객체가 insert 생성된 엔티티객체 반환
+        // 회원 등급 넣어주기
+        entity.setMrol("user");
+
+        // 2. 결과 반환 [ 생성된 엔티티의 pk값 반환 ]
+        return entity.getMno();
+    }
+
+
+
+
     // ------------------------------- 전역 객체 -------------------------------//
     @Autowired
     private MemberRepository memberRepository;      //리포지토리 객체
@@ -44,36 +119,8 @@ public class MemberService {
         return optional.get();
     }
 
-    // 1. 회원가입
-    @Transactional
-    public int setmember(MemberDto memberDto ){
-        // 1. DAO 처리 [ insert ]
-        MemberEntity entity = memberRepository.save( memberDto.toEntity() );
-        // memberRepository.save( 엔티티 객체 ) : 해당 엔티티 객체가 insert 생성된 엔티티객체 반환
-        // 2. 결과 반환 [ 생성된 엔티티의 pk값 반환 ]
-        return entity.getMno();
-    }
-    // 2. 로그인 // ♨ 시큐리티 사용시 필요 없음
-   /* @Transactional
-    public int getmember(MemberDto memberDto ){
-        // 1. Dao 처리 [ select ]
-        // 1. 모든 엔티티=레코드 호출 [ select * from member ]
-        List<MemberEntity> entityList = memberRepository.findAll();
-        // 2. 입력받은 데이터와 일치값 찾기
-        for( MemberEntity entity : entityList ){ // 리스트 반복
-            if( entity.getMemail().equals(memberDto.getMemail())){ // 엔티티=레코드 의 이메일 과 입력받은 이메일
-                if( entity.getMpassword().equals(memberDto.getMpassword())){ // 엔티티=레코드 의 패스워드 와 입력받은 패스워드
-                    // 세션 부여 [ 로그인 성공시 'loginMno'이름으로 회원번호 세션 저장  ]
-                    request.getSession().setAttribute("loginMno" , entity.getMno() );
-                    // 엔티티 = 레코드 = 로그인 성공한객체
-                    return 1;// 로그인 성공했다.
-                }else{
-                    return 2; // 패스워드 틀림 [ 전제조건 : 아이디중복 없다는 전제조건 ]
-                }
-            }
-        }
-        return 0; // 아이디가 틀림
-    }*/
+    // ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽ 비 밀 번 호 찾 기 ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+
     // 3. 비밀번호찾기
     @Transactional
     public String getpassword( String memail ){
@@ -88,6 +135,9 @@ public class MemberService {
         }
         return null;
     }
+
+    // ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽ 회 원 탈 퇴 ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+
     // 4. 회원탈퇴
     @Transactional
     public int setdelete( String mpassword ){
@@ -112,6 +162,9 @@ public class MemberService {
         }
         return 0; // [ 만약에 세션이 null 이면 반환 o 혹은 select 실패시   ]
     }
+
+    // ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽ 회 원 수 정 ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+
     // 5. 회원 수정
     @Transactional // 데이터 수정[update]시 필수 ~~
     public int setupdate( String mpassword ){
@@ -133,6 +186,11 @@ public class MemberService {
         }
         return 0;
     }
+
+
+    // ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽ 로 그 인 ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+
+    /*
     // 6. 로그인 여부 판단 메소드
     public int getloginMno(){
         // 1. 세션 호출
@@ -141,6 +199,44 @@ public class MemberService {
         if( object != null ){ return (Integer) object; }
         else{ return 0; }
     }
+    */
+
+    // 2. 로그인 // ♨ 시큐리티 사용시 필요 없음
+   /* @Transactional
+    public int getmember(MemberDto memberDto ){
+        // 1. Dao 처리 [ select ]
+        // 1. 모든 엔티티=레코드 호출 [ select * from member ]
+        List<MemberEntity> entityList = memberRepository.findAll();
+        // 2. 입력받은 데이터와 일치값 찾기
+        for( MemberEntity entity : entityList ){ // 리스트 반복
+            if( entity.getMemail().equals(memberDto.getMemail())){ // 엔티티=레코드 의 이메일 과 입력받은 이메일
+                if( entity.getMpassword().equals(memberDto.getMpassword())){ // 엔티티=레코드 의 패스워드 와 입력받은 패스워드
+                    // 세션 부여 [ 로그인 성공시 'loginMno'이름으로 회원번호 세션 저장  ]
+                    request.getSession().setAttribute("loginMno" , entity.getMno() );
+                    // 엔티티 = 레코드 = 로그인 성공한객체
+                    return 1;// 로그인 성공했다.
+                }else{
+                    return 2; // 패스워드 틀림 [ 전제조건 : 아이디중복 없다는 전제조건 ]
+                }
+            }
+        }
+        return 0; // 아이디가 틀림
+    }*/
+
+
+    // ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽로 그 아 웃▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+
+    /*
+
+    // 7. 로그아웃
+    public void logout(){
+        // 기본 세션명의 세션데이터를 null
+        request.getSession().setAttribute("loginMno" , null );
+    }
+    */
+
+
+
     // 7. 로그아웃
     public void logout(){
         // 기본 세션명의 세션데이터를 null
@@ -190,6 +286,7 @@ public class MemberService {
         }catch (Exception e){ System.out.println("메일전송 실패 : "+e); }
 
     }
+
 
 
 }

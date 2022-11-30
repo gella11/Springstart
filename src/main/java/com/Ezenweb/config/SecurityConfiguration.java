@@ -1,16 +1,46 @@
 package com.Ezenweb.config;
 
+import com.Ezenweb.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private MemberService memberService;
+    @Override // 인증(로그인) 관련 메소드 재정의
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(memberService).passwordEncoder( new BCryptPasswordEncoder() );
+    }
+
     @Override // 재정의 [ 상속받은 클래스로부터 메소드 재구현 ]
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http); //모든 http url 보안 설정 ( 주소창 보안이 풀림 )
+        http
+                .formLogin()                                // 로그인 페이지 보안 설정
+                    .loginPage("/member/login")                 // 아이디와 비밀번호를 입력받을 url
+                    .loginProcessingUrl("/member/getmember")    // 로그인 처리할 url [ 컨트롤 안가고 서비스로 감 ]
+                    .defaultSuccessUrl("/")                     // 로그인 성공시 페이지 전환
+                    .failureUrl("/member/login") // 로그인 실패시 페이지 전환
+                    .usernameParameter("memail")                    // 이름 DTO
+                    .passwordParameter("mpassword")                 // 비밀번호 DTO
+                .and()
+                    .logout()
+                        .logoutRequestMatcher( new AntPathRequestMatcher("/member/logout") )
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)    // 세션초기화 [ principal초기화 ]
+                .and()                                              // 기능 구분
+                    .csrf()                                         // 요청 위조
+                        .ignoringAntMatchers("/member/getmember") // 해당 url은 csrf무시  [ post 가능해짐] [ 오류 403]
+                        .ignoringAntMatchers("/member/setmember"); // 회원가입 페이지 기능 가능
     }
+
+
 }
 
 /*

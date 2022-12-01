@@ -4,6 +4,7 @@ function button(){
         url:"/member/getloginMno",
         type:"get",
         success: function(re){
+        alert(re)
         let html = ""
         if(re !== "" ){
             html = '<a href="/member/logout"><button type="button"> 로그아웃 </button> </a>'

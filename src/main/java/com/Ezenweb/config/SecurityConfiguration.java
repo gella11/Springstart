@@ -17,6 +17,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override // 인증(로그인) 관련 메소드 재정의
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(memberService).passwordEncoder( new BCryptPasswordEncoder() );
+        //
     }
 
     @Override // 재정의 [ 상속받은 클래스로부터 메소드 재구현 ]
@@ -37,10 +38,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()                                              // 기능 구분
                     .csrf()                                         // 요청 위조
                         .ignoringAntMatchers("/member/getmember") // 해당 url은 csrf무시  [ post 가능해짐] [ 오류 403]
-                        .ignoringAntMatchers("/member/setmember"); // 회원가입 페이지 기능 가능
+                        .ignoringAntMatchers("/member/setmember") // 회원가입 페이지 기능 가능
+                .and()
+                        .oauth2Login()              // 소셜 로그인 보안 설정
+                        .userInfoEndpoint()         // 종착점 [ 소셜 회원정보를 받는 곳]
+                        .userService(memberService); // 해덩 서비스에서 Endpoint를 memberService로 잡는다. // loadUser 메소드 구현해야함
     }
-
-
 }
 
 /*

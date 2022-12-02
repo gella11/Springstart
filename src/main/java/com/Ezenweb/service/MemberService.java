@@ -64,12 +64,31 @@ public class MemberService
 
         // 4. Dto 처리
         OauthDto oauthDto = OauthDto.of( registrationId , oauth2UserInfo , oAuth2User.getAttributes() );
-        // *. DB 처리
+        // *. Db 처리
+        // 1. 이메일로 엔티티 검색 [ 가입  or 기존회원 구분 ]
+        Optional< MemberEntity > optional
+                = memberRepository.findByMemail( oauthDto.getMemail() );
 
-        // 권한
+        MemberEntity memberEntity = null; //
+        if( optional.isPresent() ) { // 기존회원이면 // Optional 클래스 [ null 예외처리 방지 ]
+            memberEntity = optional.get();
+
+            // ▲▲▲▲이메일이 같지만 회사가 달랐을 때, 구분 안함. 그냥 DB에 먼저 로그인 한 계정을 넣음
+            /* ▼▼▼▼이메일이 같지만 회사가 달랐을 때, 구분할 경우
+            if(optional.get().getMrol().equals(registrationId)){
+                memberEntity = optional.get();
+            }else{
+                memberEntity = memberRepository.save( oauthDto.toEntity() );
+            }
+             */
+
+        }else{ // 기존회원이 아니면 [ 가입 ]
+            memberEntity = memberRepository.save( oauthDto.toEntity() );
+        }
+        // 권한부여
         Set<GrantedAuthority> authorities   = new HashSet<>();
-        authorities.add( new SimpleGrantedAuthority( "kakaoUser") );
-        // 5. 반환
+        authorities.add( new SimpleGrantedAuthority( memberEntity.getMrol() ) );
+        // 5. 반환 MemberDto[ 일반회원 vs oauth : 통합회원 - loginDto
         MemberDto memberDto = new MemberDto();
         memberDto.setMemail( oauthDto.getMemail() );
         memberDto.setAuthorities( authorities );
@@ -145,6 +164,8 @@ public class MemberService
         // 람다식을 쓰는 이유 : 간결해지니까.
         MemberEntity memberEntity = memberRepository.findByMemail(memail).orElseThrow( ()-> new UsernameNotFoundException("사용자가 존재하지 않습니다.") );
 
+        // [소셜] 회원도
+
         // 2. 토큰 생성 [ 일반 유저 ]
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority( memberEntity.getMrol() ) ); // 토큰정보에 일반회원 내용 넣기
@@ -190,7 +211,7 @@ public class MemberService
         // 1. 인증된 토큰 확인
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 2. 인증된 토큰 내용 확인
-        Object principal= authentication.getPrincipal();
+        Object principal = authentication.getPrincipal(); // Principal:접근주체 [ UserDetails , OAuth2User (MemberDto) ]
         System.out.println("토큰 내용 확인 ::: " + principal);
         // 3. 토큰 내용에 따른 제어
         if(principal.equals("anonymousUser")){ // 로그인 전

@@ -1,1 +1,40 @@
 .header_name{  color:blue; }
+
+a{
+    color:black;
+    text-decoration:none;
+    outline : none;
+}
+ul{ list-style-type:none; }
+.webbox{
+    width : 1000px;
+    margin :0 auto;
+}
+.logo{
+    width : 25%;
+}
+
+.header{
+    display : flex;
+    justify-content : space-between;
+}
+
+.top_menu{
+    display : flex;
+    justify-content : space-between;
+}
+
+.top_menu li{
+    margin-left : 20px;
+}
+.box{
+    width : 1000px;
+    margin : 0 auto;
+}
+.person{
+    margin : 0 auto;
+}
+.chart{
+    text-align: center;
+    margin : 0 auto;
+}

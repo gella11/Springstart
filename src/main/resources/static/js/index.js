@@ -11,12 +11,10 @@ function button(){
                   +'<a href="/member/findpassword"><button type="button"> 비밀번호 찾기</button></a>'
                   +'<a href="/member/update"><button type="button"> 비밀번호 수정</button></a>'
                   +'<a href="/member/delete"><button type="button"> 회원탈퇴</button></a>'
-
              }
         else{
             html ='<a href="/member/signup"><button> 회원가입 </button></a>'
                   +'<a href="/member/login"> <button> 로그인 </button></a>'
-
             }
             document.querySelector('.buttonbox').innerHTML = html
         }

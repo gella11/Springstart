@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:3000") // 요청 포트 변경 어노테이션 // 3000번대가 여기를 들어올 수 있게끔 해줌
+// @CrossOrigin(origins = "http://localhost:3000") // 요청 포트 변경 어노테이션 // 3000번대가 여기를 들어올 수 있게끔 해줌
 @RestController // 해당 클래스가 controller 임을 명시 [스프링이 알아야함]
 @RequestMapping("/member") // 클래스 위에 넣으면 공통URL
 public class MemberController {
@@ -20,8 +20,8 @@ public class MemberController {
     @Autowired // 스프링 컨테이너 빈 생성 [ 외부에 메모리 위임 ]
     private MemberService memberService; // 서비스 객체 생성
 
-    // --------------------------------- HTML 반환 매핑 ---------------------------------- //
-    @GetMapping("/signup")  // 프로젝트내 resource -> templates -> member -> signup.html 반환
+    // --------------------------------- HTML 반환 매핑 [ 리액트 사용시 안씀 ]---------------------------------- //
+   /* @GetMapping("/signup")  // 프로젝트내 resource -> templates -> member -> signup.html 반환
     public Resource getsignup(){ return new ClassPathResource("templates/member/signup.html");    }
     @GetMapping("/login")
     public Resource getlogin(){
@@ -34,7 +34,7 @@ public class MemberController {
     @GetMapping("/delete")
     public Resource getdelete(){ return new ClassPathResource("templates/member/delete.html");}
     @GetMapping("/update")
-    public Resource getupdate(){ return new ClassPathResource("templates/member/update.html");}
+    public Resource getupdate(){ return new ClassPathResource("templates/member/update.html");}*/
 
     // --------------------------------- 서비스/기능 매핑 ------------------------------------- //
     @PostMapping("/setmember") // 1.회원가입 기능

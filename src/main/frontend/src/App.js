@@ -1,6 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
+import Chart from "./Chart/Chart";
+import Evaluation from "./Chart/Evaluation";
 
+/*
 function App() {
   return (
     <div className="App">
@@ -21,5 +24,24 @@ function App() {
     </div>
   );
 }
+*/
+
+/*
+function App() {
+  return (
+    <div style={{ width: 1000, height: 800 }}>
+        <Chart2 />
+    </div>
+  );
+}
+*/
+
+
+function App() {
+  return (
+         <Evaluation />
+  );
+}
+
 
 export default App;

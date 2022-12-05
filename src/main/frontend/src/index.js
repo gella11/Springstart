@@ -14,14 +14,42 @@ import Index from './component/Index';
 import Header from './component/Header';
 import Footer from './component/Footer';
 
+import Chart from './Chart/Chart';
+import Chart2 from './Chart/Chart2';
+import Evaluation from './Chart/Evaluation';
+
+import NotificationsList from './Book/chapter6/NotificationsList';
+import Notification from './Book/chapter6/Notification';
+
 // 2. Dom 컨테이너 [ public-> index.html 안에 있는 태그 ]
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+
+root.render(
+         <React.StrictMode>
+           <App />
+         </React.StrictMode>
+       );
+
+/*
+
+root.render(
+         <React.StrictMode>
+           <NotificationsList />
+         </React.StrictMode>
+       );
+*/
+
+
+/*
 
 root.render(
          <React.StrictMode>
            <Index />
          </React.StrictMode>
        );
+*/
+
 
 /*
     3. Dom 컨테이너 렌더링

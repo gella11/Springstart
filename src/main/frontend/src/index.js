@@ -21,15 +21,25 @@ import Evaluation from './Chart/Evaluation';
 import NotificationsList from './Book/chapter6/NotificationsList';
 import Notification from './Book/chapter6/Notification';
 
+import Counter from './Book/chapter7/Ex1_Hook';
+
 // 2. Dom 컨테이너 [ public-> index.html 안에 있는 태그 ]
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
+root.render(
+         <React.StrictMode>
+           <Evaluation />
+         </React.StrictMode>
+       );
+
+/*
 
 root.render(
          <React.StrictMode>
            <App />
          </React.StrictMode>
        );
+*/
 
 /*
 

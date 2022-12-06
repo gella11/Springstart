@@ -131,6 +131,48 @@ public class MemberService
         return optional.get();
     }
 
+
+    // ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽ 과 제  ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+    // ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽ 과 제  ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+    // ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽ 과 제  ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+/*
+
+    // 멤버 정보 다 가져오기
+    public List< > mlist(){
+        // 1. JPA 이용한 모든 엔티티 호출
+        List<MemberEntity> list = memberRepository.findAll();
+        // 2. 엔티티 --> DTO
+        // Dto list 선언
+        List<MemberDto> dtoList = new ArrayList<>();
+        for( MemberEntity entity : list ){
+            dtoList.add( entity.toDto() ); // 형변환
+        }
+        return dtoList;
+    }
+
+    // 해당 회원 번호에 대하여 judge 설문 점수 저장하기
+    public int setjudge(MemberDto memberDto ){
+        // DB 관리자가 패스워드 보면 안됭께
+        // 암호화 [ 시큐리티 제공] [ bcrypt ]
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        memberDto.setMpassword(passwordEncoder.encode(memberDto.getPassword() ) ); // 암호화 된 것은 String
+
+        // 1. DAO 처리 [ insert ]
+        MemberEntity entity = memberRepository.save( memberDto.toEntity() );
+        // memberRepository.save( 엔티티 객체 ) : 해당 엔티티 객체가 insert 생성된 엔티티객체 반환
+        // 회원 등급 넣어주기
+        entity.setMrol("user");
+
+        // 2. 결과 반환 [ 생성된 엔티티의 pk값 반환 ]
+        return entity.getMno();
+    }
+*/
+
+    // △△△△△△△△△△△△△△△△△△△△△△△△△△△ 과 제  △△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+    // △△△△△△△△△△△△△△△△△△△△△△△△△△△ 과 제  △△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+    // △△△△△△△△△△△△△△△△△△△△△△△△△△△ 과 제  △△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+
+
     // ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽ 회 원 가 입 ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
     // 1. 회원가입
     @Transactional
@@ -385,6 +427,11 @@ public class MemberService
                    3. host , port 등 정보 작성
         3. 메소드 작성
  */
+
+
+
+
+
 
 
 }

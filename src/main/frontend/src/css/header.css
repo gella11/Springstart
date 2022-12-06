@@ -10,9 +10,7 @@ ul{ list-style-type:none; }
     width : 1000px;
     margin :0 auto;
 }
-.logo{
-    width : 25%;
-}
+.logo{ width : 25%;}
 
 .header{
     display : flex;
@@ -24,17 +22,29 @@ ul{ list-style-type:none; }
     justify-content : space-between;
 }
 
-.top_menu li{
-    margin-left : 20px;
-}
+.top_menu li{ margin-left : 20px;}
+
 .box{
     width : 1000px;
     margin : 0 auto;
 }
-.person{
-    margin : 0 auto;
-}
-.chart{
+
+.box h3{text-align: center;}
+
+
+
+.inform{
     text-align: center;
     margin : 0 auto;
+    width :850px;
 }
+
+.main{margin : 0 auto;}
+.person{margin : 0 auto; height : 130px; width :850px;}
+.picture{ width : 130px; }
+.intro{ }
+.grade{ width : 150px;}
+
+.item{ width : 200px;}
+.point{ width : 200px; }
+.grape{ width : 400px;}

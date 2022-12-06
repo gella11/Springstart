@@ -17,6 +17,7 @@ import Footer from './component/Footer';
 import Chart from './Chart/Chart';
 import Chart2 from './Chart/Chart2';
 import Evaluation from './Chart/Evaluation';
+import Survey from './Chart/Survey';
 
 import NotificationsList from './Book/chapter6/NotificationsList';
 import Notification from './Book/chapter6/Notification';
@@ -28,7 +29,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
          <React.StrictMode>
-           <Evaluation />
+           <Survey />
          </React.StrictMode>
        );
 

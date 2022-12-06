@@ -46,7 +46,8 @@ public class MemberController {
     public int getmember( @RequestBody MemberDto memberDto ){
         int result = memberService.getmember( memberDto );
         return result;
-    }*/ // 시큐리티 사용시 필요 없음
+    } // 시큐리티 사용시 필요 없음*/
+
     @GetMapping("/getpassword") // 3.패스워드 찾기
     public String getpassword( @RequestParam("memail") String memail ){
         String result = memberService.getpassword( memail );

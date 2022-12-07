@@ -1,0 +1,16 @@
+
+.people_box{
+    height : 1000px;
+    width : 1000px;
+    text-align : center;
+}
+.people{
+    height : 3px;
+    width : 1000px;
+}
+.people_title{
+    height : 10px;
+}
+.people_list{
+    height : 10px;
+}

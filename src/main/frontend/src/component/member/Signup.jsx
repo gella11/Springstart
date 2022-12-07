@@ -30,8 +30,17 @@ function Signup(props) {
         // axios.post() ,axios.get() ,axios.put() ,axios.delete()
         axios
             .post("http://localhost:8080/member/setmember" , info)  // 요청
-            .then( res => { alert(res.data) } )                       //  응답
-     }
+            .then( res => { // 응답
+                            let result = res.data ;
+                            if( result != 0 ){ // 회원가입 성공
+                                alert('회원가입 성공')
+                            }else{ // 회원가입 실패
+                                alert('회원가입 실패')
+                            }
+                         } )
+                        .catch( err => { console.log( err ) } )                             // 예외처리
+
+                }
     const getauth = () => { alert('원종이형 바보 getauth')  }
     const setimer = () => { alert('원종이형 바보 setimer')  }
     const authcode = () => { alert('원종이형 바보 authcode')  }

@@ -132,6 +132,9 @@ public class BoardService {
         }
         else{ return false; } // 2. 0 이면 entity 생성 실패
     }
+
+
+
     // 2. 게시물 목록 조회
     @Transactional
     public List<BoardDto> boardlist( int bcno , int page ,String key, String keyword){
@@ -184,6 +187,10 @@ public class BoardService {
 
         return dlist;  // 4. 변환된 리스트 dist 반환
     }
+
+
+
+
     // 3. 게시물 개별 조회
     @Transactional
     public BoardDto getboard( int bno ){

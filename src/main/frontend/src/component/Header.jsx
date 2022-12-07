@@ -40,6 +40,7 @@ export default function Header(){
                     <li> <Link to="/" >  Home </Link> </li>
                     <li> <Link to="./member/Signup" > 회원가입 </Link> </li>
                     <li> <Link to="./member/Login" > 로그인 </Link> </li>
+                    <li> <a href="/member/logout"> 로그아웃     </a> </li>
                     <li> <Link to="./Board/List" > 자유게시판 </Link> </li>
                     <li> <Link to="./Board/Write" > 글쓰기 </Link> </li>
                 </ul>

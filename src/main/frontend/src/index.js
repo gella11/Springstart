@@ -18,18 +18,21 @@ import Chart from './Chart/Chart';
 import Chart2 from './Chart/Chart2';
 import Evaluation from './Chart/Evaluation';
 import Survey from './Chart/Survey';
+import Hrm from './Chart/Hrm';
+import PersonAdd from './Chart/PersonAdd';
 
 import NotificationsList from './Book/chapter6/NotificationsList';
 import Notification from './Book/chapter6/Notification';
 
 import Counter from './Book/chapter7/Ex1_Hook';
+import Accommodate from './Book/chapter7/Accommodate' // 7장
 
 // 2. Dom 컨테이너 [ public-> index.html 안에 있는 태그 ]
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
          <React.StrictMode>
-           <Survey />
+           <PersonAdd />
          </React.StrictMode>
        );
 

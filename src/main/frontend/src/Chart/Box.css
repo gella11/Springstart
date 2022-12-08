@@ -17,9 +17,7 @@ ul{ list-style-type:none; }
     display : flex;
     justify-content : space-between;
 }
-*{
-border : 1px solid black;
-}
+
 
 .opinion{
     text-align: center;

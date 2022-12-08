@@ -20,12 +20,21 @@ import Evaluation from './Chart/Evaluation';
 import Survey from './Chart/Survey';
 import Hrm from './Chart/Hrm';
 import PersonAdd from './Chart/PersonAdd';
+import PersonEdit from './Chart/PersonEdit';
 
 import NotificationsList from './Book/chapter6/NotificationsList';
 import Notification from './Book/chapter6/Notification';
 
 import Counter from './Book/chapter7/Ex1_Hook';
 import Accommodate from './Book/chapter7/Accommodate' // 7장
+
+import ConfirmButton from './Book/chapter8/ConfirmButton' // 8장
+import ConfirmButton2 from './Book/chapter8/ConfirmButton2' // 8장
+import TestState from './Book/chapter8/TestState' // 8장
+import Ex1_Event from './Book/chapter8/Ex1_Event' // 8장
+
+import Toolbar from './Book/chapter9/Toolbar' // 9장
+import LandingPage from './Book/chapter9/LandingPage' // 9장
 
 // 2. Dom 컨테이너 [ public-> index.html 안에 있는 태그 ]
 const root = ReactDOM.createRoot(document.getElementById('root'));

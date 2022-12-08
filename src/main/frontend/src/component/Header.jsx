@@ -20,13 +20,35 @@ export default function Header(){
         //.then( (response)  => {응답 실행문} )
     // axios.type('URL').then(res => { alert('응답')})*/
 
+    /*
+        { login == "" ?
+                (
+                    <>
+                        <li> <Link to="./member/Signup" > 회원가입 </Link> </li>
+                        <li> <Link to="./member/Login" > 로그인 </Link> </li>)
+                    </>
+                :
+                (
+                    <>
+                        <li> {login} </li>
+                        <li> <a href="/member/logout"> 로그아웃     </a> </li>
+                        <li> <Link to="./book/list"> 리액트공부방     </a> </li>
+                        <li> <Link to="./Board/Write" > 글쓰기 </Link> </li>
+                    </>
+                )
+            }
+
+            <li> <Link to="/" >  Home </Link> </li>
+            <li> <Link to="./Board/List" > 자유게시판 </Link> </li>
+    */
+
     const[login,setLogin]=useState(null);
         // 로그인된 회원정보 state 생명주기 주입
         // 변경시 재 랜더링
 
         axios
             .get("/member/getloginMno")
-             .then((response)=>{setLogin(response.data);})
+            .then((response)=>{setLogin(response.data);})
 
 
     return(
@@ -36,13 +58,26 @@ export default function Header(){
                     <Link to="/"> <img className="logo" src={Logo} /> </Link>
                 </div>
                 <ul className="top_menu">
-                    <li> {login} </li>
-                    <li> <Link to="/" >  Home </Link> </li>
-                    <li> <Link to="./member/Signup" > 회원가입 </Link> </li>
-                    <li> <Link to="./member/Login" > 로그인 </Link> </li>
-                    <li> <a href="/member/logout"> 로그아웃     </a> </li>
-                    <li> <Link to="./Board/List" > 자유게시판 </Link> </li>
-                    <li> <Link to="./Board/Write" > 글쓰기 </Link> </li>
+
+                    { login == "" ?
+                            (
+                                <>
+                                    <li> <Link to="/member/signup" > 회원가입   </Link> </li>
+                                    <li> <Link to="/member/login" > 로그인     </Link> </li>
+                                </>
+                            )
+                            :
+                            (
+                                <>
+                                    <li> { login } </li>
+                                    <li> <a href="/member/logout"> 로그아웃     </a> </li>
+                                    <li> <Link to="/Book/Booklist"> 리액트공부방     </Link> </li>
+                                </>
+                            )
+                        }
+                        <li> <Link to="/board/list" > 자유게시판     </Link> </li>
+
+
                 </ul>
             </div>
         </div>

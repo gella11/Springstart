@@ -52,6 +52,11 @@ export default function Survey(){
 
     return(
         <div style={{padding : 50}}>
+            <div>
+            이름 : 김 아 무 개
+            부서 : 인 사
+            직급 : 만 년 대 리
+            </div>
             <table class="table">
                 <thead>
                     <tr>

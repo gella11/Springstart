@@ -27,7 +27,7 @@ export default function PersonAdd(){
             const mstart = moment(value).format('YYYY-MM-DD');
             const [ isFull , setIsFull  ] = useState( false );
             const btn = () => {  setIsFull(!isFull); } ;
-            const btn2 = () => {  if(isFull){setIsFull(!isFull)} } ;
+            //const btn2 = () => {  setIsFull(!isFull); };
 
     // axios
     // 해야할 기능
@@ -52,6 +52,50 @@ export default function PersonAdd(){
                 }*/
                 alert(personadd.addinfo[0])
             }
+    // 유효성검사
+         // 이름
+         const [name, setName] = useState("")
+         const [nameState, setNameState] = useState(false)
+         const nameInput = (e)  => {  setName(e.target.value); nameTest() }
+         const nameError  = /^[a-zA-Z가-힣]{2,20}$/; // 영대소문자, 한글 최소 2글자, 최대 20글자
+         const nameTest =  () => {
+                                    if(nameError.test(name)){
+                                      setNameState(true)
+                                    }
+                                 }
+        // 생년월일
+        const [birth, setBirth] = useState("")
+        const [birthState, setBirthState] = useState(false)
+        const birthInput = (e)  => {  setBirth(e.target.value); birthTest() }
+        const birthError  = /(\d{2}([0]\d|[1][0-2])([0][1-9]|[1-2]\d|[3][0-1])[1-4])$/;
+        const birthTest =  () => {
+                                    if(birthError.test(birth)){
+                                      setBirthState(true)
+                                    }
+                                 }
+
+
+        // 이메일
+        const [email, setEmail] = useState("")
+        const [emailState, setEmailState] = useState(false)
+        const emailInput = (e)  => {  setEmail(e.target.value); emailTest() }
+        const emailError  = /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
+        const emailTest =  () => {
+                                    if(emailError.test(email)){
+                                      setEmailState(true)
+                                    }
+                                 }
+        // 전화번호
+         const [phone, setPhone] = useState("")
+         const [phoneState, setPhoneState] = useState(false)
+         const phoneInput = (e)  => {  setPhone(e.target.value); phoneTest() }
+         const phoneError = /^([0-9]{2,3})-([0-9]{3,4})-([0-9]{3,4})$/;
+         const phoneTest =  () => {
+                                    if(phoneError.test(phone)){
+                                      setPhoneState(true)
+                                    }
+                                  }
+
 
 
     return(
@@ -77,19 +121,23 @@ export default function PersonAdd(){
            </select>
         </div>
         <div>
-            <input type="text" className="mname" placeholder="이름" />
+            <input type="text" className="mname" placeholder="이름" onChange={nameInput}/>
+            { nameState ? "👌" : "영대소문자x , 특수문자x" }
         </div>
         <div>
-            <input type="text" className="mbirth" placeholder="생년월일" />
+            <input type="text" className="mbirth" placeholder="생년월일" onChange={birthInput} />
+            { birthState ? "👌" : "ex) 901011 성별까지" }
         </div>
         <div>
-            <input type="text" className="mphone" placeholder="전화번호" />
+            <input type="text" className="mphone" placeholder="전화번호" onChange={phoneInput}/>
+            { phoneState ? "👌" : "ex) 010-1234-1234" }
         </div>
         <div>
-            <input type="text" className="memail" placeholder="이메일" />
+            <input type="text" className="memail" placeholder="이메일" onChange={emailInput} />
+            { emailState ? "👌" : "ex) aaa@naver.com" }
         </div>
         <div>
-            { isFull && <div className="calbox" onClick={btn2}> <Calendar onChange={onChange} value={value} /> </div>  }
+            { isFull && <div className="calbox" > <Calendar onChange={onChange} value={value} /> </div>  }
             <input type="text" value={mstart}  / > <br/>
             <button onClick={btn}> 입사일 </button>
         </div>

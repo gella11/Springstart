@@ -29,6 +29,7 @@ import NotificationsList from '../Book/chapter6/NotificationsList';
 import Accommodate from '../Book/chapter7/Accommodate';
 import Ex1_Event from '../Book/chapter8/Ex1_Event';
 import LandingPage from '../Book/chapter9/LandingPage';
+import Signup1 from '../Book/chapter11/Signup';
 
 
 
@@ -62,6 +63,7 @@ export default function Index( props ){
                         <Route path="/chapter7/Accommodate" element={ <Accommodate/> } />
                         <Route path="/chapter8/Ex1_Event" element={ <Ex1_Event/> } />
                         <Route path="/chapter9/LandingPage" element={ <LandingPage/> } />
+                        <Route path="/chapter11/Signup" element={ <Signup/> } />
 
                     </Routes>
                 <Footer/>

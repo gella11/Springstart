@@ -14,6 +14,8 @@ import Index from './component/Index';
 import Header from './component/Header';
 import Footer from './component/Footer';
 
+import BoardWrite from './component/board/BoardWrite';
+
 import Chart from './Chart/Chart';
 import Chart2 from './Chart/Chart2';
 import Evaluation from './Chart/Evaluation';
@@ -36,12 +38,17 @@ import Ex1_Event from './Book/chapter8/Ex1_Event' // 8장
 import Toolbar from './Book/chapter9/Toolbar' // 9장
 import LandingPage from './Book/chapter9/LandingPage' // 9장
 
+import AttendanceBook from './Book/chapter10/AttendanceBook' // 9장
+
+import NameForm from './Book/chapter11/Ex1_Form' // 11장
+import Signup1 from './Book/chapter11/Signup' // 11장
+
 // 2. Dom 컨테이너 [ public-> index.html 안에 있는 태그 ]
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
          <React.StrictMode>
-           <PersonAdd />
+           <Index />
          </React.StrictMode>
        );
 

@@ -33,7 +33,7 @@ public class BoardService {
     @Autowired
     private BcategoryRepository bcategoryRepository;
 
-    String path = "C:\\Users\\504\\Desktop\\Spring\\Springstart\\src\\main\\resources\\static\\bupload\\";
+    String path = "C:\\";
     
     
     // @Transactional : 엔티티 DML 적용 할때 사용되는 어노테이션
@@ -104,7 +104,7 @@ public class BoardService {
     @Transactional
     public boolean setboard( BoardDto boardDto ){
         // ---------- 로그인 회원 찾기 메소드 실행 --> 회원엔티티 검색 --------------  //
-        MemberEntity memberEntity = memberService.getEntity();
+        MemberEntity memberEntity = memberService.getEntity(); // * 시큐리티 적용하기 전/후 확인
         if( memberEntity == null ){ return false; }
         // ---------------------------- //
         // ------------ 선택한 카테고리 번호 --> 카테고리 엔티티 검색 --------------  //
@@ -113,6 +113,7 @@ public class BoardService {
         BcategoryEntity bcategoryEntity = optional.get();
         // --------------------------  //
         BoardEntity boardEntity  = boardRepository.save( boardDto.toEntity() );  // 1. dto --> entity [ INSERT ] 저장된 entity 반환
+        System.out.println("♨♨♨♨♨♨"+boardEntity);
         if( boardEntity.getBno() != 0 ){   // 2. 생성된 entity의 게시물번호가 0 이 아니면  성공
 
             // 1. MultipartFile 인터페이스
@@ -121,7 +122,7 @@ public class BoardService {
             // .transferTo( 파일객체 )
             // File : java 외 파일을 객체화 클래스
             // new File("경로") : 해당 경로의 파일을 객체화
-
+            fileupload(boardDto,boardEntity);
             // 1. 회원 <---> 게시물 연관관계 대입
             boardEntity.setMemberEntity( memberEntity ); // ***!!!! 5. fk 대입
             memberEntity.getBoardEntityList().add( boardEntity); // *** 양방향 [ pk필드에 fk 연결 ]

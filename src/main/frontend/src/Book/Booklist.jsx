@@ -17,6 +17,7 @@ export default function Booklist(){
                     <li> <Link to="/chapter7/Accommodate"> 챕터7 </Link> </li>
                     <li> <Link to="/chapter8/Ex1_Event"> 챕터8 </Link> </li>
                     <li> <Link to="/chapter9/LandingPage"> 챕터9 </Link> </li>
+                    <li> <Link to="/chapter11/Signup"> 챕터11 </Link> </li>
                </ul>
 
         </div>

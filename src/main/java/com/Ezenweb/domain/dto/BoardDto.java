@@ -19,8 +19,9 @@ public class BoardDto {
     private MultipartFile bfile;       // 첨부파일 [쓰기용]
     private String bfilename;           // 첨부파일 [호출용]
 
-    private int startbtn;
-    private int endbtn;
+    // private int startbtn;
+    // private int endbtn;
+    private String bdate;       // 작성일 [ LocalDateTime -> String 출력용 ]
 
 
     private int mno;            // 작성자[회원번호-fk]

@@ -2,6 +2,7 @@ package com.Ezenweb.service;
 
 import com.Ezenweb.domain.dto.BcategoryDto;
 import com.Ezenweb.domain.dto.BoardDto;
+import com.Ezenweb.domain.dto.PageDto;
 import com.Ezenweb.domain.entity.Board.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -134,8 +135,41 @@ public class BoardService {
         else{ return false; } // 2. 0 이면 entity 생성 실패
     }
 
+    // 2. 게시물 목록 조회
+    @Transactional      // bcno : 카테고리번호 , page : 현재 페이지번호 , key : 검색필드명 , keyword : 검색 데이터
+    public PageDto boardlist( PageDto pageDto){
+        Page<BoardEntity> elist = null; // 1. 페이징처리된 엔티티 리스트 객체 선언
+        Pageable pageable = PageRequest.of(  // 2.페이징 설정 [ 페이지시작 : 0 부터 ] , 게시물수 , 정렬
+                pageDto.getPage()-1 , 3 , Sort.by( Sort.Direction.DESC , "bno")  );
+    /*    // 3. 검색여부 / 카테고리  판단
+        if( pageDto.getKey().equals("btitle") ){ // 검색필드가 제목이면
+            elist = boardRepository.findbybtitle( pageDto.getBcno() , pageDto.getKeyword() , pageable);
+        }else if( pageDto.getKey().equals("bcotent") ){ // 검색필드가 제목이면
+            elist = boardRepository.findbybcontent( pageDto.getBcno() , pageDto.getKeyword()  , pageable);
+        }else{ // 검색이 없으면 // 카테고리 출력
+            if( pageDto.getBcno() == 0  ) elist = boardRepository.findAll( pageable);
+            else elist = boardRepository.findBybcno( pageDto.getBcno() , pageable);
+        }*/
 
+        elist = boardRepository.findbySearch( pageDto.getBcno() , pageDto.getKey() ,pageDto.getKeyword() , pageable);
+        // 프론트엔드에 표시할 페이징번호버튼 수
+        int btncount = 5;                               // 1.페이지에 표시할 총 페이지 버튼 개수
+        int startbtn = (pageDto.getPage()/btncount) * btncount +1;   // 2. 시작번호 버튼
+        int endbtn = startbtn + btncount-1;             // 3. 마지막번호 버튼
+        if( endbtn > elist.getTotalPages() ) endbtn =elist.getTotalPages();
 
+        List<BoardDto> dlist = new ArrayList<>(); // 2. 컨트롤에게 전달할때 형변환[ entity->dto ] : 역할이 달라서
+        for( BoardEntity entity : elist ){ // 3. 변환
+            dlist.add( entity.toDto() );
+        }
+        pageDto.setList( dlist  );  // 결과 리스트 담기
+        pageDto.setStartbtn( startbtn );
+        pageDto.setEndbtn( endbtn );
+        pageDto.setTotalBoards( elist.getTotalElements() );
+
+        return pageDto;
+    }
+/*
     // 2. 게시물 목록 조회
     @Transactional
     public List<BoardDto> boardlist( int bcno , int page ,String key, String keyword){
@@ -167,14 +201,14 @@ public class BoardService {
 
 
 
-        /*if( bcno == 0 ){   elist = boardRepository.findAll( pageable );   } // 카테고리번호가 0 이면 전체보기
+        *//*if( bcno == 0 ){   elist = boardRepository.findAll( pageable );   } // 카테고리번호가 0 이면 전체보기
         else{  // 카테고리번호가 0이 아니면 선택된 카테고리별 보기
             //[ after 페이징처리 ]
             elist = boardRepository.findBybcno( bcno , pageable );
             //[ before 페이징처리 ]
             //BcategoryEntity bcEntity =  bcategoryRepository.findById( bcno ).get();
             //elist  = bcEntity.getBoardEntityList(); // 해당 엔티티의 게시물목록
-        }*/
+        }*//*
 
 
         List<BoardDto> dlist = new ArrayList<>(); // 2. 컨트롤에게 전달할때 형변환[ entity->dto ] : 역할이 달라서
@@ -187,7 +221,7 @@ public class BoardService {
 
 
         return dlist;  // 4. 변환된 리스트 dist 반환
-    }
+    }*/
 
 
 
@@ -269,6 +303,56 @@ public class BoardService {
         entityList.forEach( e -> e.toString()  );
  */
 
+/*
+        // 1. 리스트를 순회하는 방법 3가지 [
+        // 화살표함수[람다식표현] js : ( 인수 )  => { 실행코드 }    java : 인수 -> { 실행코드 }
+        for( int i = 0 ; i < entityList.size(); i++ ){
+            BcategoryEntity e =  entityList.get(i);
+            System.out.println( e.toString() );
+        }
+        for ( BcategoryEntity e : entityList ){
+            System.out.println( e.toString() );
+        }
+        entityList.forEach( e -> e.toString()  );
+ */
+
+
+// 데이터[파일명]가 중복일때 식별자 만들기
+// 1. pk+데이터
+// 2. uuid + 데이터 [ UUID (범용 고유 식별자 클래스 : UUID.randomUUID().toString() ]
+// 3. 업로드 날짜/시간 + 데이터
+// 4. 중복된파일명 중 최근파일명뒤에 데이터 + (중복수+1)
+
+
+
+/*
+            // 1. MultipartFile 인터페이스
+                // .getOriginalFilename() : 해당 인터페이스에 연결(주소)된 파일의 이름 호출
+                // .transferTo() : 파일이동[ 사용자pc ---> 개발자 pc ]
+                    // .transferTo( 파일객체 )
+                    // File : java 외 파일을 객체화 클래스
+                        // new File("경로") : 해당 경로의 파일을 객체화
+ */
+
+
+
+
+/*
+            // 1. Pageable 인터페이스  [ import 사용시 domain 패키지 ]
+            // 2. PageRequest 구현클래스
+                // 1.PageRequest.of( 현재페이지번호 , 표시할레코드수 )
+ */
+
+
+// *. 검색페이징된
+//        System.out.println(" 엔티티들 : " + elist );
+//        System.out.println(" 총엔티티수 : " + elist.getTotalElements() );
+//        System.out.println(" 총페이지수 : " + elist.getTotalPages() );
+//        System.out.println(" 현재페이지수 : " + elist.getNumber() );
+//        System.out.println(" 현재엔티티들 객체정보 : " + elist.getContent());
+//        System.out.println(" 현재 페이지의 게시물수 : " + elist.getNumberOfElements() );
+//        System.out.println(" 현재 페이지가 첫페이지 여부확인 : "+elist.isFirst() );
+//        System.out.println(" 현재 페이지가 마지막페이지 여부확인 : "+elist.isLast() );
 
 
 

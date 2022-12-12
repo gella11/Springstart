@@ -14,7 +14,7 @@ export default function BoardWrite( props ) {
                                     .catch( err => { console.log( err); } )
                                 }
     // useEffect
-             useEffect( getbcategory , [] ); // 페이지가 mount , unmount
+            useEffect( getbcategory , [] ); // 페이지가 mount , unmount
 
     // 2. 입력된 카테고리 등록 함수 [ 실행조건 : 카테고리 등록 버튼 눌렀을때 ]
             const setbcategory = () => {
@@ -35,7 +35,7 @@ export default function BoardWrite( props ) {
 
                             let formdata = new FormData(boardform);
                             console.log(formdata)
-                           console.log(boardform)
+                            console.log(boardform)
                             formdata.set("bcno" , bcno ); // 폼데이터의 카테고리 번호 추가
                             axios
                                 .post("/board/setboard" , formdata , { headers: { 'Content-Type': 'multipart/form-data'  } }  )

@@ -40,7 +40,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .ignoringAntMatchers("/member/getmember") // 해당 url은 csrf무시  [ post 가능해짐] [ 오류 403]
                         .ignoringAntMatchers("/member/setmember") // 회원가입 페이지 기능 가능
                         .ignoringAntMatchers("/board/setbcategory")
-                        .ignoringAntMatchers("/board/setboard")
+                        .ignoringAntMatchers("/board/setboard") // 게시물 작성
+                        .ignoringAntMatchers("/board/boardlist") // 게시물 출력
                 .and()
                         .oauth2Login()              // 소셜 로그인 보안 설정
                         .defaultSuccessUrl("/")     // 소셜 로그인 성공시 이동하는 URL

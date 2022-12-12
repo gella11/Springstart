@@ -2,10 +2,14 @@ package com.Ezenweb.domain.entity.Board;
 
 
 import com.Ezenweb.domain.dto.BoardDto;
+import com.Ezenweb.domain.entity.BaseEntity;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "board")
@@ -15,7 +19,7 @@ import javax.persistence.*;
 @Setter
 @ToString
 @Builder
-public class BoardEntity {
+public class BoardEntity extends BaseEntity {
     @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto
     private int bno;            // 게시물번호
@@ -54,6 +58,11 @@ public class BoardEntity {
                 //.bfile( this.bfile )
                 .memail(this.memberEntity.getMemail())
                 .bfilename(this.bfile)
+                /*.bdate(
+                        this.getCdate().toLocalDate().toString().equals( LocalDateTime.now().toLocalDate().toString() ) ?
+                                this.getCdate().toLocalTime().format( DateTimeFormatter.ofPattern(" HH : mm : ss ")) :
+                                this.getCdate().toLocalDate().toString()
+                )*/
                 .build();
     }
 

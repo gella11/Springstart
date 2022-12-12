@@ -31,6 +31,8 @@ import Ex1_Event from '../Book/chapter8/Ex1_Event';
 import LandingPage from '../Book/chapter9/LandingPage';
 import Signup1 from '../Book/chapter11/Signup';
 
+import BoardView from './board/BoardView';
+
 
 
 // 라우터 설치[ 터미널 ] : npm i react-router-dom == npm install react-router-dom
@@ -55,6 +57,7 @@ export default function Index( props ){
                         <Route path="/board/list" element={ <BoardList/> } />
                         <Route path="/board/write" element={ <BoardWrite/> } />
                         <Route path="/Book/Booklist" element={ <Booklist/> } />
+                        <Route path="/board/view/:bno" element={ <BoardView/> } />
 
                         <Route path="/chapter3/Library" element={ <Library/> } />
                         <Route path="/chapter4/Clock" element={ <Clock/> } />

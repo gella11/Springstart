@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <h3> 카테고리 추가</h3>
+    <input type="text" class="c_add"> <br>
+    <button type="button" onclick="c_add()"> 카테고리 등록</button>
+
+    <h3> 카테고리 리스트</h3>
+    <div class="c_list"> </div>
+
+    <h3> 방문록 쓰기 </h3>
+    <form class="formbox">
+        작성자 : <input type="text" name="vcontent"><br>
+        내용 : <input type="text" name="vname"><br>
+        첨파 : <input type="file" name="vfile"><br>
+        <button type="button" onclick="v_add()"> 방문록 쓰기</button>
+    </form>
+
+    <table class="vlist"></table>
+
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <script src="../js/Nonboard/Non_index.js"> </script>
+
+</body>
+</html>

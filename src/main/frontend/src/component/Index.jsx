@@ -32,6 +32,9 @@ import LandingPage from '../Book/chapter9/LandingPage';
 import Signup1 from '../Book/chapter11/Signup';
 
 import BoardView from './board/BoardView';
+import BoardUpdate from './board/BoardUpdate';
+
+import Chatting from './chatting/Chatting';
 
 
 
@@ -58,6 +61,7 @@ export default function Index( props ){
                         <Route path="/board/write" element={ <BoardWrite/> } />
                         <Route path="/Book/Booklist" element={ <Booklist/> } />
                         <Route path="/board/view/:bno" element={ <BoardView/> } />
+                        <Route path="/board/update/:bno" element={ <BoardUpdate/> } />
 
                         <Route path="/chapter3/Library" element={ <Library/> } />
                         <Route path="/chapter4/Clock" element={ <Clock/> } />
@@ -66,7 +70,7 @@ export default function Index( props ){
                         <Route path="/chapter7/Accommodate" element={ <Accommodate/> } />
                         <Route path="/chapter8/Ex1_Event" element={ <Ex1_Event/> } />
                         <Route path="/chapter9/LandingPage" element={ <LandingPage/> } />
-                        <Route path="/chapter11/Signup" element={ <Signup/> } />
+                        <Route path="/chatting" element={ <Chatting/> } />
 
                     </Routes>
                 <Footer/>

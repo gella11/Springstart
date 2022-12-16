@@ -268,8 +268,9 @@ public class MemberService
             // 등급 있다면
             //if( memberDto.getAttribute().contains("일반회원") ){}
             //else if(memberDto.getAuthorities().contains("관리자") ){}
-            return memberDto.getMemail()+"_"+memberDto.getAuthorities();
+            //return memberDto.getMemail()+"_"+memberDto.getAuthorities();
             //return memberDto.getMemail();
+            return memberDto.getMemail();
         }
     }
      /*

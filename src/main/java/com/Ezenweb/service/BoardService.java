@@ -34,7 +34,7 @@ public class BoardService {
     @Autowired
     private BcategoryRepository bcategoryRepository;
 
-    String path = "C:\\";
+    String path = "C:\\upload\\";  // C드라이브-> upload 폴더 생성
     
     
     // @Transactional : 엔티티 DML 적용 할때 사용되는 어노테이션
@@ -82,7 +82,8 @@ public class BoardService {
 
     // 첨부파일 업로드
     public boolean fileupload( BoardDto boardDto , BoardEntity boardEntity) {
-        if (boardDto.getBfile() != null) { // ** 첨부파일 있을때
+        //if (boardDto.getBfile() != null) { // ** 첨부파일 있을때
+        if( !boardDto.getBfile().getOriginalFilename().equals("") ) { // ** 첨부파일 있을때
             // * 업로드 된 파일의 이름 [ 문제점 : 파일명 중복 ]
             String uuid = UUID.randomUUID().toString(); // 1. 난수생성
             String filename = uuid + "_" + boardDto.getBfile().getOriginalFilename(); // 2. 난수+파일명
@@ -258,7 +259,8 @@ public class BoardService {
 
 
             // 1) 수정할 첨부파일이 있을 때, --->>> 새로운 첨부파일 업로드, db수정한다.
-            if(boardDto.getBfile() != null){
+            //if(boardDto.getBfile() != null){
+            if( !boardDto.getBfile().getOriginalFilename().equals("") ){      // boardDto : 수정할정보   boardEntity : 원본[db테이블]
                 if(entity.getBfile() != null){  // 기존 첨부파일 있을 때
                     File file = new File( path + entity.getBfile()); // 기존 첨부파일 객체화
                     if(file.exists()){

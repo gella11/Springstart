@@ -36,6 +36,8 @@ import BoardUpdate from './board/BoardUpdate';
 
 import Chatting from './chatting/Chatting';
 
+import Calculator from '../Book/chapter12/Calculator' // 12장
+
 
 
 // 라우터 설치[ 터미널 ] : npm i react-router-dom == npm install react-router-dom
@@ -70,7 +72,10 @@ export default function Index( props ){
                         <Route path="/chapter7/Accommodate" element={ <Accommodate/> } />
                         <Route path="/chapter8/Ex1_Event" element={ <Ex1_Event/> } />
                         <Route path="/chapter9/LandingPage" element={ <LandingPage/> } />
+                        <Route path="/chapter11/Signup1" element={ <Signup/> } />
+                        <Route path="/chapter12/Calculator" element={ <Calculator/> } />
                         <Route path="/chatting" element={ <Chatting/> } />
+
 
                     </Routes>
                 <Footer/>
